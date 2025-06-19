@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EuroMillions Group - Jeu en groupe officiel</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #ffc107;
+            --light: #f5f5f5;
+            --dark: #212121;
+            --success: #4caf50;
+            --danger: #f44336;
+            --info: #2196f3;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+        }
+        
+        .game-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .panel {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .panel h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary);
+        }
+        
+        .numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .main-number {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .main-number.selected {
+            background-color: var(--secondary);
+            color: var(--dark);
+        }
+        
+        .star-number {
+            background-color: #e91e63;
+            color: white;
+        }
+        
+        .star-number.selected {
+            background-color: #ff9800;
+            color: white;
+        }
+        
+        .player-list {
+            margin-top: 20px;
+        }
+        
+        .player-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .player-item:last-child {
+            border-bottom: none;
+        }
+        
+        .player-name {
+            font-weight: bold;
+        }
+        
+        .player-stake {
+            color: var(--primary);
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background-color: #0d47a1;
+        }
+        
+        button:disabled {
+            background-color: #b0bec5;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: var(--dark);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #ffb300;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .results {
+            margin-top: 30px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .winning-numbers {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .winning-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            color: white;
+        }
+        
+        .prize-breakdown {
+            margin-top: 20px;
+        }
+        
+        .prize-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .prize-item:last-child {
+            border-bottom: none;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+        
+        .alert-danger {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+        
+        .ticket {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .ticket-owner {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .ticket-numbers {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+        
+        .ticket-main {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .ticket-stars {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .ticket-small-number {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .ticket-main .ticket-small-number {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .ticket-stars .ticket-small-number {
+            background-color: #e91e63;
+            color: white;
+        }
+        
+        .matched {
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .stake-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .stake-input input {
+            max-width: 100px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--primary);
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Nouveaux styles pour les fonctionnalités avancées */
+        .pricing-options {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #dee2e6;
+        }
+        
+        .option {
+            margin: 10px 0;
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+        }
+        
+        .total-price {
+            font-size: 1.2em;
+            padding: 10px;
+            background: var(--primary);
+            color: white;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .auth-panel {
+            max-width: 400px;
+            margin: 20px auto;
+        }
+        
+        .group-code {
+            font-family: monospace;
+            letter-spacing: 2px;
+            background: var(--secondary);
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        
+        .system-badge {
+            background: #e91e63;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-left: 5px;
+        }
+        
+        .group-management {
+            margin: 15px 0;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 8px;
+        }
+        
+        .tax-simulator {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 8px;
+        }
+        
+        .probability-chart {
+            margin-top: 20px;
+            height: 200px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .probability-bar {
+            position: absolute;
+            bottom: 0;
+            background: var(--info);
+            transition: width 0.5s;
+        }
+        
+        @media (max-width: 768px) {
+            .game-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>EuroMillions Group</h1>
+            <p>Jouez en groupe et partagez les gains proportionnellement</p>
+        </header>
+        
+        <!-- Panel d'authentification -->
+        <div class="auth-panel panel" id="auth-panel">
+            <h2>Connexion</h2>
+            <div id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" placeholder="votre@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Mot de passe</label>
+                    <input type="password" id="login-password" placeholder="••••••••">
+                </div>
+                <button id="login-btn" class="btn-success">Se connecter</button>
+                <button id="register-btn" class="btn-secondary">Créer un compte</button>
+            </div>
+            <div id="user-profile" style="display:none;">
+                <p>Connecté en tant que <strong id="user-email"></strong></p>
+                <button id="logout-btn" class="btn-danger">Déconnexion</button>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="play">Jouer</div>
+            <div class="tab" data-tab="results">Résultats</div>
+            <div class="tab" data-tab="stats">Statistiques</div>
+            <div class="tab" data-tab="rules">Règles</div>
+        </div>
+        
+        <!-- Onglet Jouer -->
+        <div class="tab-content active" id="play-tab">
+            <div class="game-container">
+                <div class="panel">
+                    <h2>Votre participation</h2>
+                    
+                    <div class="form-group">
+                        <label for="player-name">Votre nom</label>
+                        <input type="text" id="player-name" placeholder="Votre nom dans le groupe">
+                    </div>
+                    
+                    <!-- Options tarifaires FDJ -->
+                    <div class="pricing-options">
+                        <h3>Options de jeu</h3>
+                        
+                        <div class="option">
+                            <label for="grid-count">Nombre de grilles :</label>
+                            <input type="number" id="grid-count" min="1" max="200" value="1">
+                            <small>2.50€ par grille</small>
+                        </div>
+                        
+                        <div class="option">
+                            <input type="checkbox" id="lucky-numbers">
+                            <label for="lucky-numbers">Numéros Chance (+1.00€)</label>
+                        </div>
+                        
+                        <div class="option">
+                            <label for="system-select">Système :</label>
+                            <select id="system-select">
+                                <option value="">Aucun système</option>
+                                <option value="System 7">Système 7 (+7.00€)</option>
+                                <option value="System 8">Système 8 (+28.00€)</option>
+                                <option value="System 9">Système 9 (+84.00€)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="total-price">
+                            <strong>Total : </strong>
+                            <span id="dynamic-price">2.50€</span>
+                        </div>
+                    </div>
+                    
+                    <h3>Numéros principaux (5)</h3>
+                    <div class="numbers" id="main-numbers"></div>
+                    
+                    <h3>Étoiles (2)</h3>
+                    <div class="numbers" id="star-numbers"></div>
+                    
+                    <button id="add-player-btn" class="btn-secondary" disabled>Ajouter votre participation</button>
+                </div>
+                
+                <div class="panel">
+                    <h2>Groupe de jeu <span id="group-status-badge"></span></h2>
+                    
+                    <div class="group-management" id="group-management">
+                        <div id="public-group">
+                            <p>Mode : <strong>Groupe public</strong></p>
+                            <button id="create-group-btn" class="btn-secondary">Créer un groupe privé</button>
+                        </div>
+                        <div id="private-group" style="display:none;">
+                            <p>Mode : <strong>Groupe privé</strong></p>
+                            <p>Code d'accès : <span class="group-code" id="group-code-display"></span></p>
+                            <div class="form-group">
+                                <label for="join-code">Rejoindre un groupe :</label>
+                                <input type="text" id="join-code" placeholder="Entrez le code">
+                                <button id="join-group-btn" class="btn-secondary">Rejoindre</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p>Total des mises: <strong id="total-stake">0</strong>€</p>
+                    <p>Nombre de participants: <strong id="player-count">0</strong></p>
+                    
+                    <div class="player-list" id="player-list"></div>
+                    
+                    <button id="draw-btn" disabled>Tirer les numéros gagnants</button>
+                    <button id="reset-btn" class="btn-danger">Réinitialiser</button>
+                </div>
+            </div>
+            
+            <div class="panel" id="tickets-container">
+                <h2>Billets du groupe</h2>
+                <div id="tickets-list"></div>
+            </div>
+        </div>
+        
+        <!-- Onglet Résultats -->
+        <div class="tab-content" id="results-tab">
+            <div class="results" id="results-container" style="display: none;">
+                <h2>Résultats du tirage</h2>
+                
+                <div class="winning-numbers" id="winning-numbers"></div>
+                
+                <div id="prize-message" class="alert"></div>
+                
+                <h3>Détail des gains</h3>
+                <div class="prize-breakdown" id="prize-breakdown"></div>
+                
+                <h3>Gains par participant</h3>
+                <div id="player-winnings"></div>
+            </div>
+        </div>
+        
+        <!-- Onglet Statistiques -->
+        <div class="tab-content" id="stats-tab">
+            <div class="panel">
+                <h2>Analyse des gains</h2>
+                
+                <div class="tax-simulator">
+                    <h3>Simulateur fiscal</h3>
+                    <div class="form-group">
+                        <label for="gross-amount">Montant brut des gains :</label>
+                        <input type="number" id="gross-amount" placeholder="100000">
+                    </div>
+                    <p>Montant net après prélèvements (30%) : <strong id="net-amount">0</strong>€</p>
+                </div>
+                
+                <div class="probability-chart">
+                    <h3>Probabilités de gain</h3>
+                    <div id="probability-bars"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Onglet Règles -->
+        <div class="tab-content" id="rules-tab">
+            <div class="panel">
+                <h2>Règles du jeu</h2>
+                <p>1. Chaque grille coûte 2.50€ (prix officiel FDJ)</p>
+                <p>2. Options disponibles : Numéros Chance (+1€) et Systèmes (7, 8 ou 9)</p>
+                <p>3. Les gains sont répartis proportionnellement aux mises</p>
+                <p>4. Prélèvement fiscal de 30% sur les gains</p>
+                
+                <h3>Grille des gains officielle</h3>
+                <div class="prize-breakdown">
+                    <div class="prize-item">
+                        <span>5 numéros + 2 étoiles</span>
+                        <span>Jackpot</span>
+                    </div>
+                    <div class="prize-item">
+                        <span>5 numéros + 1 étoile</span>
+                        <span>~1,000,000€</span>
+                    </div>
+                    <!-- Autres prix... -->
+                </div>
+                
+                <div class="legal-notice">
+                    <p><strong>Note légale :</strong> Ceci est une simulation. Les règles officielles de l'EuroMillions s'appliquent. Consultez le site FDJ pour les résultats réels.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===========================================
+        // CORE DE L'APPLICATION - GESTION COMPLÈTE
+        // ===========================================
+        class EuroMillionsGame {
+            constructor() {
+                this.players = [];
+                this.tickets = [];
+                this.winningNumbers = [];
+                this.winningStars = [];
+                this.currentGroup = null;
+                this.pricingModel = {
+                    basePrice: 2.50,
+                    options: {
+                        multiple: { priceMultiplier: 1 },
+                        luckyNumbers: { additionalPrice: 1.00 },
+                        systems: {
+                            "System 7": 7.00,
+                            "System 8": 28.00,
+                            "System 9": 84.00
+                        }
+                    }
+                };
+                this.prizes = {
+                    '5+2': { name: '5 numéros + 2 étoiles', amount: 0, winners: [] },
+                    '5+1': { name: '5 numéros + 1 étoile', amount: 1000000, winners: [] },
+                    '5+0': { name: '5 numéros', amount: 100000, winners: [] },
+                    '4+2': { name: '4 numéros + 2 étoiles', amount: 5000, winners: [] },
+                    '4+1': { name: '4 numéros + 1 étoile', amount: 200, winners: [] },
+                    '4+0': { name: '4 numéros', amount: 100, winners: [] },
+                    '3+2': { name: '3 numéros + 2 étoiles', amount: 50, winners: [] },
+                    '2+2': { name: '2 numéros + 2 étoiles', amount: 20, winners: [] },
+                    '3+1': { name: '3 numéros + 1 étoile', amount: 15, winners: [] },
+                    '3+0': { name: '3 numéros', amount: 10, winners: [] },
+                    '1+2': { name: '1 numéro + 2 étoiles', amount: 7, winners: [] },
+                    '2+1': { name: '2 numéros + 1 étoile', amount: 5, winners: [] },
+                    '2+0': { name: '2 numéros', amount: 3, winners: [] }
+                };
+                this.ticketGenerator = new TicketGenerator();
+            }
+            
+            // Calcul du prix selon les options FDJ
+            calculatePrice(choices) {
+                let total = this.pricingModel.basePrice;
+                total *= choices.gridCount || 1;
+                if (choices.luckyNumbers) total += this.pricingModel.options.luckyNumbers.additionalPrice;
+                if (choices.system) total += this.pricingModel.options.systems[choices.system];
+                return parseFloat(total.toFixed(2));
+            }
+            
+            // Ajout d'un joueur avec validation
+            addPlayer(playerData) {
+                // Validation
+                if (!playerData.name || playerData.name.length < 2) {
+                    throw new Error("Nom invalide");
+                }
+                
+                if (playerData.betAmount > 1000) {
+                    throw new Error("Mise maximale dépassée (1000€ max)");
+                }
+                
+                // Génération des tickets uniques
+                const tickets = this.ticketGenerator.generate({
+                    gridCount: playerData.gridCount,
+                    system: playerData.system
+                });
+                
+                const player = {
+                    id: Date.now().toString(),
+                    name: playerData.name,
+                    betAmount: playerData.betAmount,
+                    tickets: tickets,
+                    percentage: 0
+                };
+                
+                this.players.push(player);
+                this.tickets.push(...tickets);
+                this.updatePercentages();
+                
+                return player;
+            }
+            
+            // Mise à jour des pourcentages de participation
+            updatePercentages() {
+                const totalStake = this.players.reduce((sum, p) => sum + p.betAmount, 0);
+                this.players.forEach(p => {
+                    p.percentage = totalStake > 0 ? (p.betAmount / totalStake) * 100 : 0;
+                });
+            }
+            
+            // Création d'un groupe privé
+            createPrivateGroup(owner) {
+                const code = Math.random().toString(36).substr(2, 6).toUpperCase();
+                this.currentGroup = {
+                    code,
+                    owner,
+                    members: [owner],
+                    totalStake: 0,
+                    createdAt: new Date()
+                };
+                return this.currentGroup;
+            }
+            
+            // Tirage des numéros gagnants
+            draw() {
+                // Réinitialisation des résultats précédents
+                this.winningNumbers = [];
+                this.winningStars = [];
+                
+                // Réinitialisation des gagnants
+                for (const prize in this.prizes) {
+                    this.prizes[prize].winners = [];
+                }
+                
+                // Tirage des 5 numéros gagnants (1-50)
+                while (this.winningNumbers.length < 5) {
+                    const num = Math.floor(Math.random() * 50) + 1;
+                    if (!this.winningNumbers.includes(num)) {
+                        this.winningNumbers.push(num);
+                    }
+                }
+                this.winningNumbers.sort((a, b) => a - b);
+                
+                // Tirage des 2 étoiles gagnantes (1-12)
+                while (this.winningStars.length < 2) {
+                    const num = Math.floor(Math.random() * 12) + 1;
+                    if (!this.winningStars.includes(num)) {
+                        this.winningStars.push(num);
+                    }
+                }
+                this.winningStars.sort((a, b) => a - b);
+                
+                // Vérification des gains
+                this.checkWinners();
+                
+                return {
+                    numbers: this.winningNumbers,
+                    stars: this.winningStars
+                };
+            }
+            
+            // Vérification des gagnants
+            checkWinners() {
+                this.players.forEach(player => {
+                    player.tickets.forEach(ticket => {
+                        const mainMatches = ticket.mainNumbers.filter(n => this.winningNumbers.includes(n)).length;
+                        const starMatches = ticket.starNumbers.filter(n => this.winningStars.includes(n)).length;
+                        
+                        let prizeCategory = null;
+                        
+                        // Détermination de la catégorie de gain
+                        if (mainMatches === 5 && starMatches === 2) prizeCategory = '5+2';
+                        else if (mainMatches === 5 && starMatches === 1) prizeCategory = '5+1';
+                        else if (mainMatches === 5 && starMatches === 0) prizeCategory = '5+0';
+                        else if (mainMatches === 4 && starMatches === 2) prizeCategory = '4+2';
+                        else if (mainMatches === 4 && starMatches === 1) prizeCategory = '4+1';
+                        else if (mainMatches === 4 && starMatches === 0) prizeCategory = '4+0';
+                        else if (mainMatches === 3 && starMatches === 2) prizeCategory = '3+2';
+                        else if (mainMatches === 2 && starMatches === 2) prizeCategory = '2+2';
+                        else if (mainMatches === 3 && starMatches === 1) prizeCategory = '3+1';
+                        else if (mainMatches === 3 && starMatches === 0) prizeCategory = '3+0';
+                        else if (mainMatches === 1 && starMatches === 2) prizeCategory = '1+2';
+                        else if (mainMatches === 2 && starMatches === 1) prizeCategory = '2+1';
+                        else if (mainMatches === 2 && starMatches === 0) prizeCategory = '2+0';
+                        
+                        if (prizeCategory) {
+                            this.prizes[prizeCategory].winners.push({
+                                playerId: player.id,
+                                playerName: player.name,
+                                percentage: player.percentage,
+                                ticket: ticket
+                            });
+                        }
+                    });
+                });
+            }
+            
+            // Calcul des gains nets (après impôts)
+            calculateNetWinnings(amount) {
+                const taxRate = 0.30; // 30% de prélèvements
+                return amount * (1 - taxRate);
+            }
+            
+            // Réinitialisation du jeu
+            reset() {
+                this.players = [];
+                this.tickets = [];
+                this.winningNumbers = [];
+                this.winningStars = [];
+                this.currentGroup = null;
+                
+                for (const prize in this.prizes) {
+                    this.prizes[prize].winners = [];
+                }
+            }
+        }
+
+        // Générateur de tickets avec anti-doublons
+        class TicketGenerator {
+            constructor() {
+                this.generatedHashes = new Set();
+            }
+            
+            generate(config) {
+                const tickets = [];
+                const count = config.gridCount || 1;
+                
+                for (let i = 0; i < count; i++) {
+                    tickets.push(this.generateUniqueTicket());
+                }
+                
+                return tickets;
+            }
+            
+            generateUniqueTicket(maxAttempts = 1000) {
+                let attempts = 0;
+                
+                while (attempts++ < maxAttempts) {
+                    const mainNumbers = this.generateRandomNumbers(5, 50);
+                    const starNumbers = this.generateRandomNumbers(2, 12);
+                    const hash = this.hashTicket(mainNumbers, starNumbers);
+                    
+                    if (!this.generatedHashes.has(hash)) {
+                        this.generatedHashes.add(hash);
+                        return {
+                            mainNumbers: mainNumbers.sort((a, b) => a - b),
+                            starNumbers: starNumbers.sort((a, b) => a - b)
+                        };
+                    }
+                }
+                
+                throw new Error("Impossible de générer un ticket unique après " + maxAttempts + " tentatives");
+            }
+            
+            generateRandomNumbers(count, max) {
+                const numbers = [];
+                while (numbers.length < count) {
+                    const num = Math.floor(Math.random() * max) + 1;
+                    if (!numbers.includes(num)) numbers.push(num);
+                }
+                return numbers;
+            }
+            
+            hashTicket(mainNumbers, starNumbers) {
+                return `${mainNumbers.sort((a,b)=>a-b).join(',')}|${starNumbers.sort((a,b)=>a-b).join(',')}`;
+            }
+            
+            reset() {
+                this.generatedHashes.clear();
+            }
+        }
+
+        // ===========================================
+        // INITIALISATION DE L'APPLICATION
+        // ===========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialisation du jeu
+            const game = new EuroMillionsGame();
+            
+            // Éléments DOM
+            const dom = {
+                // Authentification
+                authPanel: document.getElementById('auth-panel'),
+                loginForm: document.getElementById('login-form'),
+                userProfile: document.getElementById('user-profile'),
+                loginEmail: document.getElementById('login-email'),
+                loginPassword: document.getElementById('login-password'),
+                loginBtn: document.getElementById('login-btn'),
+                registerBtn: document.getElementById('register-btn'),
+                logoutBtn: document.getElementById('logout-btn'),
+                userEmail: document.getElementById('user-email'),
+                
+                // Sélection des numéros
+                mainNumbersContainer: document.getElementById('main-numbers'),
+                starNumbersContainer: document.getElementById('star-numbers'),
+                playerNameInput: document.getElementById('player-name'),
+                addPlayerBtn: document.getElementById('add-player-btn'),
+                
+                // Options tarifaires
+                gridCountInput: document.getElementById('grid-count'),
+                luckyNumbersCheckbox: document.getElementById('lucky-numbers'),
+                systemSelect: document.getElementById('system-select'),
+                dynamicPrice: document.getElementById('dynamic-price'),
+                
+                // Groupe de jeu
+                playerList: document.getElementById('player-list'),
+                totalStakeSpan: document.getElementById('total-stake'),
+                playerCountSpan: document.getElementById('player-count'),
+                drawBtn: document.getElementById('draw-btn'),
+                resetBtn: document.getElementById('reset-btn'),
+                ticketsList: document.getElementById('tickets-list'),
+                
+                // Gestion des groupes
+                publicGroupDiv: document.getElementById('public-group'),
+                privateGroupDiv: document.getElementById('private-group'),
+                groupCodeDisplay: document.getElementById('group-code-display'),
+                createGroupBtn: document.getElementById('create-group-btn'),
+                joinCodeInput: document.getElementById('join-code'),
+                joinGroupBtn: document.getElementById('join-group-btn'),
+                groupStatusBadge: document.getElementById('group-status-badge'),
+                
+                // Résultats
+                resultsContainer: document.getElementById('results-container'),
+                winningNumbersContainer: document.getElementById('winning-numbers'),
+                prizeMessage: document.getElementById('prize-message'),
+                prizeBreakdown: document.getElementById('prize-breakdown'),
+                playerWinnings: document.getElementById('player-winnings'),
+                
+                // Statistiques
+                grossAmountInput: document.getElementById('gross-amount'),
+                netAmountSpan: document.getElementById('net-amount'),
+                probabilityBars: document.getElementById('probability-bars'),
+                
+                // Navigation
+                tabs: document.querySelectorAll('.tab'),
+                tabContents: document.querySelectorAll('.tab-content')
+            };
+            
+            // État de l'interface
+            let currentUser = null;
+            let selectedMainNumbers = [];
+            let selectedStarNumbers = [];
+            
+            // ===========================================
+            // FONCTIONS D'INITIALISATION
+            // ===========================================
+            
+            // Initialisation de la sélection des numéros
+            function initNumberSelection() {
+                // Numéros principaux (1-50)
+                for (let i = 1; i <= 50; i++) {
+                    const numEl = createNumberElement(i, 'main');
+                    dom.mainNumbersContainer.appendChild(numEl);
+                }
+                
+                // Étoiles (1-12)
+                for (let i = 1; i <= 12; i++) {
+                    const numEl = createNumberElement(i, 'star');
+                    dom.starNumbersContainer.appendChild(numEl);
+                }
+            }
+            
+            function createNumberElement(number, type) {
+                const el = document.createElement('div');
+                el.className = `number ${type}-number`;
+                el.textContent = number;
+                el.dataset.number = number;
+                el.dataset.type = type;
+                
+                el.addEventListener('click', function() {
+                    toggleNumberSelection(el, type);
+                    updateAddPlayerButtonState();
+                });
+                
+                return el;
+            }
+            
+            function toggleNumberSelection(element, type) {
+                const selectedNumbers = type === 'main' ? selectedMainNumbers : selectedStarNumbers;
+                const maxSelected = type === 'main' ? 5 : 2;
+                const index = selectedNumbers.indexOf(parseInt(element.dataset.number));
+                
+                if (index > -1) {
+                    // Désélection
+                    selectedNumbers.splice(index, 1);
+                    element.classList.remove('selected');
+                } else {
+                    // Sélection
+                    if (selectedNumbers.length >= maxSelected) {
+                        alert(`Vous ne pouvez sélectionner que ${maxSelected} ${type === 'main' ? 'numéros' : 'étoiles'}`);
+                        return;
+                    }
+                    selectedNumbers.push(parseInt(element.dataset.number));
+                    element.classList.add('selected');
+                }
+                
+                // Tri des numéros sélectionnés
+                if (type === 'main') {
+                    selectedMainNumbers.sort((a, b) => a - b);
+                } else {
+                    selectedStarNumbers.sort((a, b) => a - b);
+                }
+            }
+            
+            // Initialisation des options tarifaires
+            function initPricingOptions() {
+                dom.gridCountInput.addEventListener('input', updatePriceDisplay);
+                dom.luckyNumbersCheckbox.addEventListener('change', updatePriceDisplay);
+                dom.systemSelect.addEventListener('change', updatePriceDisplay);
+                
+                updatePriceDisplay();
+            }
+            
+            function updatePriceDisplay() {
+                const choices = {
+                    gridCount: parseInt(dom.gridCountInput.value) || 1,
+                    luckyNumbers: dom.luckyNumbersCheckbox.checked,
+                    system: dom.systemSelect.value
+                };
+                
+                const price = game.calculatePrice(choices);
+                dom.dynamicPrice.textContent = `${price.toFixed(2)}€`;
+            }
+            
+            // Initialisation de l'authentification
+            function initAuth() {
+                // Simulation d'authentification
+                dom.loginBtn.addEventListener('click', function() {
+                    const email = dom.loginEmail.value.trim();
+                    if (email) {
+                        currentUser = { email };
+                        dom.userEmail.textContent = email;
+                        dom.loginForm.style.display = 'none';
+                        dom.userProfile.style.display = 'block';
+                        dom.authPanel.style.display = 'none';
+                    }
+                });
+                
+                dom.logoutBtn.addEventListener('click', function() {
+                    currentUser = null;
+                    dom.loginForm.style.display = 'block';
+                    dom.userProfile.style.display = 'none';
+                    dom.loginEmail.value = '';
+                    dom.loginPassword.value = '';
+                });
+                
+                // Masquer le panel d'auth si déjà connecté (pour le prototype)
+                dom.authPanel.style.display = 'none';
+                currentUser = { email: 'test@example.com' };
+                dom.userEmail.textContent = currentUser.email;
+                dom.loginForm.style.display = 'none';
+                dom.userProfile.style.display = 'block';
+            }
+            
+            // Initialisation de la gestion des groupes
+            function initGroupManagement() {
+                dom.createGroupBtn.addEventListener('click', function() {
+                    if (!currentUser) {
+                        alert("Veuillez vous connecter pour créer un groupe");
+                        return;
+                    }
+                    
+                    const group = game.createPrivateGroup(currentUser.email);
+                    dom.groupCodeDisplay.textContent = group.code;
+                    dom.publicGroupDiv.style.display = 'none';
+                    dom.privateGroupDiv.style.display = 'block';
+                    dom.groupStatusBadge.textContent = "(Privé)";
+                    
+                    updateGroupStats();
+                });
+                
+                dom.joinGroupBtn.addEventListener('click', function() {
+                    const code = dom.joinCodeInput.value.trim();
+                    if (code.length === 6) {
+                        alert(`Vous avez rejoint le groupe ${code}`);
+                        dom.groupStatusBadge.textContent = "(Privé)";
+                    }
+                });
+            }
+            
+            // Initialisation des statistiques
+            function initStats() {
+                dom.grossAmountInput.addEventListener('input', function() {
+                    const gross = parseFloat(dom.grossAmountInput.value) || 0;
+                    const net = game.calculateNetWinnings(gross);
+                    dom.netAmountSpan.textContent = net.toFixed(2);
+                });
+                
+                // Simulation de graphique de probabilités
+                const probabilities = [
+                    { label: '5+2', value: 1/139838160, prize: 'Jackpot' },
+                    { label: '5+1', value: 1/6991908, prize: '1M€' },
+                    { label: '4+2', value: 1/621058, prize: '5k€' },
+                    { label: '4+1', value: 1/31053, prize: '200€' },
+                    { label: '3+2', value: 1/14125, prize: '50€' }
+                ];
+                
+                probabilities.forEach(prob => {
+                    const bar = document.createElement('div');
+                    bar.className = 'probability-bar';
+                    bar.style.height = '20px';
+                    bar.style.width = `${Math.log(prob.value) * -100}px`;
+                    bar.title = `${prob.label}: 1 chance sur ${Math.round(1/prob.value)} (${prob.prize})`;
+                    
+                    const label = document.createElement('span');
+                    label.textContent = `${prob.label}: ${prob.prize}`;
+                    label.style.marginRight = '10px';
+                    label.style.fontSize = '12px';
+                    
+                    const container = document.createElement('div');
+                    container.style.display = 'flex';
+                    container.style.alignItems = 'center';
+                    container.style.margin = '5px 0';
+                    
+                    container.appendChild(label);
+                    container.appendChild(bar);
+                    dom.probabilityBars.appendChild(container);
+                });
+            }
+            
+            // Initialisation des onglets
+            function initTabs() {
+                dom.tabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        const tabName = this.dataset.tab;
+                        switchTab(tabName);
+                    });
+                });
+            }
+            
+            function switchTab(tabName) {
+                // Désactiver tous les onglets
+                dom.tabs.forEach(tab => tab.classList.remove('active'));
+                dom.tabContents.forEach(content => content.classList.remove('active'));
+                
+                // Activer l'onglet sélectionné
+                document.querySelector(`.tab[data-tab="${tabName}"]`).classList.add('active');
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+            }
+            
+            // ===========================================
+            // FONCTIONS DE MISE À JOUR DE L'INTERFACE
+            // ===========================================
+            
+            function updateAddPlayerButtonState() {
+                const hasName = dom.playerNameInput.value.trim().length > 0;
+                const validMainNumbers = selectedMainNumbers.length === 5;
+                const validStarNumbers = selectedStarNumbers.length === 2;
+                
+                dom.addPlayerBtn.disabled = !(hasName && validMainNumbers && validStarNumbers);
+            }
+            
+            function updateGroupStats() {
+                const totalStake = game.players.reduce((sum, p) => sum + p.betAmount, 0);
+                dom.totalStakeSpan.textContent = totalStake.toFixed(2);
+                dom.playerCountSpan.textContent = game.players.length;
+                dom.drawBtn.disabled = game.players.length === 0;
+                
+                renderPlayerList();
+                renderTickets();
+            }
+            
+            function renderPlayerList() {
+                dom.playerList.innerHTML = '';
+                
+                game.players.forEach(player => {
+                    const playerEl = document.createElement('div');
+                    playerEl.className = 'player-item';
+                    
+                    const nameEl = document.createElement('span');
+                    nameEl.className = 'player-name';
+                    nameEl.textContent = player.name;
+                    
+                    const stakeEl = document.createElement('span');
+                    stakeEl.className = 'player-stake';
+                    stakeEl.textContent = `${player.betAmount.toFixed(2)}€ (${player.percentage.toFixed(2)}%)`;
+                    
+                    playerEl.appendChild(nameEl);
+                    playerEl.appendChild(stakeEl);
+                    dom.playerList.appendChild(playerEl);
+                });
+            }
+            
+            function renderTickets() {
+                dom.ticketsList.innerHTML = '';
+                
+                game.players.forEach(player => {
+                    player.tickets.forEach((ticket, index) => {
+                        const ticketEl = document.createElement('div');
+                        ticketEl.className = 'ticket';
+                        
+                        const ownerEl = document.createElement('div');
+                        ownerEl.className = 'ticket-owner';
+                        ownerEl.textContent = `${player.name} - Grille ${index + 1}`;
+                        
+                        const numbersEl = document.createElement('div');
+                        numbersEl.className = 'ticket-numbers';
+                        
+                        // Numéros principaux
+                        const mainNumbersEl = document.createElement('div');
+                        mainNumbersEl.className = 'ticket-main';
+                        ticket.mainNumbers.forEach(num => {
+                            const numEl = document.createElement('div');
+                            numEl.className = 'ticket-small-number';
+                            numEl.textContent = num;
+                            numEl.dataset.number = num;
+                            numEl.dataset.type = 'main';
+                            mainNumbersEl.appendChild(numEl);
+                        });
+                        
+                        // Étoiles
+                        const starNumbersEl = document.createElement('div');
+                        starNumbersEl.className = 'ticket-stars';
+                        ticket.starNumbers.forEach(num => {
+                            const numEl = document.createElement('div');
+                            numEl.className = 'ticket-small-number';
+                            numEl.textContent = num;
+                            numEl.dataset.number = num;
+                            numEl.dataset.type = 'star';
+                            starNumbersEl.appendChild(numEl);
+                        });
+                        
+                        numbersEl.appendChild(mainNumbersEl);
+                        numbersEl.appendChild(starNumbersEl);
+                        ticketEl.appendChild(ownerEl);
+                        ticketEl.appendChild(numbersEl);
+                        dom.ticketsList.appendChild(ticketEl);
+                    });
+                });
+            }
+            
+            function displayResults() {
+                dom.resultsContainer.style.display = 'block';
+                
+                // Affichage des numéros gagnants
+                dom.winningNumbersContainer.innerHTML = '';
+                
+                game.winningNumbers.forEach(num => {
+                    const numEl = document.createElement('div');
+                    numEl.className = 'winning-number';
+                    numEl.style.backgroundColor = '#1a237e';
+                    numEl.textContent = num;
+                    dom.winningNumbersContainer.appendChild(numEl);
+                });
+                
+                game.winningStars.forEach(num => {
+                    const numEl = document.createElement('div');
+                    numEl.className = 'winning-number';
+                    numEl.style.backgroundColor = '#e91e63';
+                    numEl.textContent = num;
+                    dom.winningNumbersContainer.appendChild(numEl);
+                });
+                
+                // Mise en évidence des numéros gagnants sur les tickets
+                document.querySelectorAll('.ticket-small-number').forEach(el => {
+                    const num = parseInt(el.dataset.number);
+                    const type = el.dataset.type;
+                    
+                    if (type === 'main' && game.winningNumbers.includes(num)) {
+                        el.classList.add('matched');
+                    } else if (type === 'star' && game.winningStars.includes(num)) {
+                        el.classList.add('matched');
+                    }
+                });
+                
+                // Message de gain
+                let hasWinners = false;
+                for (const prize in game.prizes) {
+                    if (game.prizes[prize].winners.length > 0) {
+                        hasWinners = true;
+                        break;
+                    }
+                }
+                
+                if (hasWinners) {
+                    dom.prizeMessage.className = 'alert alert-success';
+                    dom.prizeMessage.textContent = 'Félicitations! Votre groupe a gagné des prix!';
+                } else {
+                    dom.prizeMessage.className = 'alert alert-danger';
+                    dom.prizeMessage.textContent = 'Dommage! Aucun prix gagné cette fois. Essayez encore!';
+                }
+                
+                // Détail des gains
+                dom.prizeBreakdown.innerHTML = '';
+                for (const prize in game.prizes) {
+                    if (game.prizes[prize].winners.length > 0) {
+                        const prizeEl = document.createElement('div');
+                        prizeEl.className = 'prize-item';
+                        
+                        const nameEl = document.createElement('span');
+                        nameEl.textContent = `${game.prizes[prize].name} (${game.prizes[prize].winners.length} gagnant(s))`;
+                        
+                        const amountEl = document.createElement('span');
+                        amountEl.textContent = `${game.prizes[prize].amount.toLocaleString('fr-FR')}€`;
+                        
+                        prizeEl.appendChild(nameEl);
+                        prizeEl.appendChild(amountEl);
+                        dom.prizeBreakdown.appendChild(prizeEl);
+                    }
+                }
+                
+                // Gains par participant
+                dom.playerWinnings.innerHTML = '';
+                game.players.forEach(player => {
+                    let totalWinnings = 0;
+                    let prizeDetails = [];
+                    
+                    for (const prize in game.prizes) {
+                        const playerWins = game.prizes[prize].winners.filter(w => w.playerId === player.id);
+                        if (playerWins.length > 0) {
+                            const prizeAmount = game.prizes[prize].amount * (player.percentage / 100);
+                            totalWinnings += prizeAmount;
+                            prizeDetails.push(`${game.prizes[prize].name}: ${prizeAmount.toFixed(2)}€`);
+                        }
+                    }
+                    
+                    const playerEl = document.createElement('div');
+                    playerEl.className = 'player-item';
+                    
+                    const nameEl = document.createElement('span');
+                    nameEl.className = 'player-name';
+                    nameEl.textContent = player.name;
+                    
+                    const winningsEl = document.createElement('span');
+                    winningsEl.className = 'player-stake';
+                    
+                    if (totalWinnings > 0) {
+                        winningsEl.textContent = `${totalWinnings.toFixed(2)}€`;
+                        winningsEl.style.color = '#4caf50';
+                        playerEl.title = prizeDetails.join('\n');
+                    } else {
+                        winningsEl.textContent = '0€';
+                        winningsEl.style.color = '#f44336';
+                    }
+                    
+                    playerEl.appendChild(nameEl);
+                    playerEl.appendChild(winningsEl);
+                    dom.playerWinnings.appendChild(playerEl);
+                });
+            }
+            
+            // ===========================================
+            // GESTION DES ÉVÉNEMENTS
+            // ===========================================
+            
+            // Ajout d'un joueur
+            dom.addPlayerBtn.addEventListener('click', function() {
+                try {
+                    const choices = {
+                        gridCount: parseInt(dom.gridCountInput.value) || 1,
+                        luckyNumbers: dom.luckyNumbersCheckbox.checked,
+                        system: dom.systemSelect.value
+                    };
+                    
+                    const player = game.addPlayer({
+                        name: dom.playerNameInput.value.trim(),
+                        betAmount: game.calculatePrice(choices),
+                        gridCount: choices.gridCount,
+                        system: choices.system
+                    });
+                    
+                    // Réinitialisation du formulaire
+                    dom.playerNameInput.value = '';
+                    selectedMainNumbers = [];
+                    selectedStarNumbers = [];
+                    document.querySelectorAll('.number.selected').forEach(el => el.classList.remove('selected'));
+                    dom.gridCountInput.value = '1';
+                    dom.luckyNumbersCheckbox.checked = false;
+                    dom.systemSelect.value = '';
+                    updatePriceDisplay();
+                    updateAddPlayerButtonState();
+                    
+                } catch (error) {
+                    alert(error.message);
+                }
+            });
+            
+            // Tirage des numéros
+            dom.drawBtn.addEventListener('click', function() {
+                game.draw();
+                displayResults();
+                switchTab('results');
+            });
+            
+            // Réinitialisation
+            dom.resetBtn.addEventListener('click', function() {
+                if (confirm("Voulez-vous vraiment réinitialiser le jeu ? Toutes les données seront perdues.")) {
+                    game.reset();
+                    selectedMainNumbers = [];
+                    selectedStarNumbers = [];
+                    
+                    // Réinitialisation de l'interface
+                    dom.playerList.innerHTML = '';
+                    dom.ticketsList.innerHTML = '';
+                    dom.totalStakeSpan.textContent = '0';
+                    dom.playerCountSpan.textContent = '0';
+                    dom.resultsContainer.style.display = 'none';
+                    document.querySelectorAll('.number.selected').forEach(el => el.classList.remove('selected'));
+                    document.querySelectorAll('.ticket-small-number').forEach(el => el.classList.remove('matched'));
+                    dom.playerNameInput.value = '';
+                    dom.drawBtn.disabled = true;
+                    updateAddPlayerButtonState();
+                    
+                    // Réinitialisation du groupe
+                    dom.publicGroupDiv.style.display = 'block';
+                    dom.privateGroupDiv.style.display = 'none';
+                    dom.groupStatusBadge.textContent = '';
+                    
+                    switchTab('play');
+                }
+            });
+            
+            // ===========================================
+            // INITIALISATION DE L'APPLICATION
+            // ===========================================
+            initNumberSelection();
+            initPricingOptions();
+            initAuth();
+            initGroupManagement();
+            initStats();
+            initTabs();
+            
+            // Désactiver le bouton d'ajout initialement
+            updateAddPlayerButtonState();
+            
+            // Écouteur pour le nom du joueur
+            dom.playerNameInput.addEventListener('input', updateAddPlayerButtonState);
+        });
+    </script>
+</body>
+</html>
